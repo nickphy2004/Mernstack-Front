@@ -4,7 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import App from "./App.jsx";
 import Register from "./Register.jsx";
-import Login from "./login.jsx";
+import Login from "./Login.jsx";
 import Pay from "./Pay.jsx";
 import Signup from "./Signup.jsx";
 
