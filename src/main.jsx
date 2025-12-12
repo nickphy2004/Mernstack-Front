@@ -1,0 +1,27 @@
+import React from "react";
+import { createRoot } from "react-dom/client";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+import App from "./App.jsx";
+import Register from "./Register.jsx";
+import Login from "./login.jsx";
+import Pay from "./Pay.jsx";
+import Signup from "./Signup.jsx";
+
+import "./index.css";
+import "./Pay.css";
+import "./Login.css";
+import "./App.css";
+import "./Signup.css";
+
+createRoot(document.getElementById("root")).render(
+  <BrowserRouter>
+    <Routes>
+      <Route path="/Sign" element={<Signup />} />
+      <Route path="/" element={<App />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/reg" element={<Register />} />
+      <Route path="/pay" element={<Pay />} />
+    </Routes>
+  </BrowserRouter>
+);
