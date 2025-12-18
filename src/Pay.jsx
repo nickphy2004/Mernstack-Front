@@ -186,7 +186,7 @@ export default function PayAdvanced() {
                 
                 handler: async function (response) {
                     try {
-                        const verifyResponse = await fetch("http://localhost:8000/payment/verify-payment", {
+                        const verifyResponse = await fetch("https://appsail-50036846539.development.catalystappsail.in/payment/verify-payment", {
                             method: "POST",
                             headers: {
                                 "Content-Type": "application/json",
