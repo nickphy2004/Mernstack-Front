@@ -54,7 +54,7 @@ export default function Login() {
     setShowSuccess(false);
 
     try {
-      const response = await fetch("http://10.67.97.244:8000/Login", {
+      const response = await fetch("http://10.26.12.160:8000/Login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
