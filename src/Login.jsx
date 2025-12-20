@@ -54,7 +54,7 @@ export default function Login() {
     setShowSuccess(false);
 
     try {
-      const response = await fetch("https://appsail-50036846539.development.catalystappsail.in/Login", {
+      const response = await fetch("http://10.67.97.244:8000/Login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"

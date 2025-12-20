@@ -51,7 +51,7 @@ export default function Register({ visible = true, onClose }) {
 
     try {
 
-      const response = await fetch("https://appsail-50036846539.development.catalystappsail.in/reqst", {
+      const response = await fetch("http://10.67.97.244:8000/reqst", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

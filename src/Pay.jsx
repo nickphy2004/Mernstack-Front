@@ -34,7 +34,7 @@ export default function PayAdvanced() {
         try {
             const user = JSON.parse(localStorage.getItem('user') || '{}');
             
-            const response = await fetch("http://localhost:8000/payment/create-order", {
+            const response = await fetch("http://10.67.97.244:8000/payment/create-order", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

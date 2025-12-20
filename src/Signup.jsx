@@ -52,7 +52,7 @@ export default function Signup() {
     setShowSuccess(false);
 
     try {
-      const response = await fetch("https://appsail-50036846539.development.catalystappsail.in/Signup", {
+      const response = await fetch("http://10.67.97.244:8000/Signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
