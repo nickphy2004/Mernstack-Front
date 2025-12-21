@@ -13,6 +13,10 @@
       "destination": "https://appsail-50037084678.development.catalystappsail.in/users"
     },
     {
+     "source": "/current-user",
+      "destination": "https://appsail-50037084678.development.catalystappsail.in/current-user"
+    },
+    {
        "source": "/payment/verify-payment",
       "destination": "https://appsail-50037084678.development.catalystappsail.in/payment/verify-payment"
     },
