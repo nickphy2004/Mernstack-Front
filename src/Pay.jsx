@@ -34,7 +34,7 @@ export default function PayAdvanced() {
         try {
             const user = JSON.parse(localStorage.getItem('user') || '{}');
             
-            const response = await fetch("http://10.26.12.160:8000/payment/create-order", {
+            const response = await fetch("https://appsail-50037084678.development.catalystappsail.in/payment/create-order", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

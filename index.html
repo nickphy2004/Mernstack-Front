@@ -10,6 +10,12 @@
   </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
+    <script type="module" src="/src/main.jsx">
+       async function testAPI() {
+      const response = await fetch('https://appsail-50037084678.development.catalystappsail.in/health');
+      const data = await response.json();
+      document.getElementById('result').innerText = JSON.stringify(data, null, 2);
+    }
+    </script>
   </body>
 </html>
