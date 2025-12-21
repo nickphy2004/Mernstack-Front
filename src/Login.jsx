@@ -70,7 +70,7 @@ export default function Login() {
       if (response.ok && data.success) {
         console.log("Login successful:", data);
         
-      
+        // Store token and user info
         sessionStorage.setItem("authToken", data.token);
         sessionStorage.setItem("user", JSON.stringify(data.user));
         
@@ -81,20 +81,28 @@ export default function Login() {
           setShowSuccess(true);
         }, 100);
 
-       
+        // Navigate to home
         setTimeout(() => {
           navigate("/");
         }, 1500);
 
       } else {
-       
+        // Handle login errors
         setLoading(false);
         
         errors = { ...initialStateError };
         
         const errorMsg = data.message ? data.message.toLowerCase() : "";
         
-        if (errorMsg.includes("email not found") || 
+        // Check for "already logged in" error
+        if (errorMsg.includes("already logged in") || 
+            errorMsg.includes("another device") || 
+            errorMsg.includes("another session") ||
+            response.status === 403) {
+          errors.custom_error = "⚠️ You are already logged in from another device/session.\nPlease logout first to login again.";
+        }
+        // Check for email not found
+        else if (errorMsg.includes("email not found") || 
             errorMsg.includes("user not found") || 
             errorMsg.includes("user does not exist") ||
             errorMsg.includes("no user found") ||
@@ -102,6 +110,7 @@ export default function Login() {
           errors.email.invalid = true;
           errors.custom_error = "This email address is not registered.";
         } 
+        // Check for incorrect password
         else if (errorMsg.includes("password") && 
                  (errorMsg.includes("incorrect") || 
                   errorMsg.includes("wrong") || 
@@ -168,7 +177,7 @@ export default function Login() {
                 fontSize: '14px',
                 fontWeight: '500'
               }}>
-                ⚠️ {error.custom_error}
+                {error.custom_error}
               </div>
             )}
 
