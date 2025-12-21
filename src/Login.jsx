@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
 
@@ -21,6 +21,17 @@ export default function Login() {
     email: "",
     password: ""
   });
+
+  // Auto-login check: If user already logged in, redirect to home
+  useEffect(() => {
+    const token = localStorage.getItem("authToken");
+    const user = localStorage.getItem("user");
+    
+    if (token && user) {
+      // User already logged in, redirect to home
+      navigate("/");
+    }
+  }, [navigate]);
 
   const handleInput = (event) => {
     const { name, value } = event.target;
@@ -70,9 +81,9 @@ export default function Login() {
       if (response.ok && data.success) {
         console.log("Login successful:", data);
         
-        // Store token and user info
-        sessionStorage.setItem("authToken", data.token);
-        sessionStorage.setItem("user", JSON.stringify(data.user));
+        // Store token and user info in localStorage (persists across sessions)
+        localStorage.setItem("authToken", data.token);
+        localStorage.setItem("user", JSON.stringify(data.user));
         
         console.log("Token stored successfully:", data.token);
 

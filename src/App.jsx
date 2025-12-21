@@ -414,8 +414,9 @@ function Profile({ handleLogout }) {
   useEffect(() => {
     const fetchCurrentUser = async () => {
       try {
-        const token = sessionStorage.getItem("authToken");
-        const storedUser = JSON.parse(sessionStorage.getItem("user") || "{}");
+        // Changed from sessionStorage to localStorage
+        const token = localStorage.getItem("authToken");
+        const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
         
         if (!token) {
           setError("No authentication token found");
@@ -431,7 +432,8 @@ function Profile({ handleLogout }) {
         
         setUser(res.data);
       } catch (err) {
-        const storedUser = JSON.parse(sessionStorage.getItem("user") || "{}");
+        // Changed from sessionStorage to localStorage
+        const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
         if (storedUser.Name || storedUser.name) {
           setUser({
             Name: storedUser.Name || storedUser.name,
@@ -540,8 +542,9 @@ function App() {
     
     if (!confirmLogout) return;
 
-    const token = sessionStorage.getItem("authToken");
-    const user = JSON.parse(sessionStorage.getItem("user") || "{}");
+    // Changed from sessionStorage to localStorage
+    const token = localStorage.getItem("authToken");
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
 
     if (!token) {
       alert("No active session found");
@@ -568,7 +571,7 @@ function App() {
 
       if (response.ok) {
         alert("Account deleted successfully!");
-        sessionStorage.clear();
+        // Changed from sessionStorage to localStorage
         localStorage.clear();
         navigate("/Sign");
         window.location.reload();
