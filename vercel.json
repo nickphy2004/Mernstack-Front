@@ -10,15 +10,15 @@
     },
     {
      "source": "/users",
-      "destination": "https://appsail-50037084678.development.catalystappsail.in/Signup"
+      "destination": "https://appsail-50037084678.development.catalystappsail.in/users"
     },
     {
        "source": "/payment/verify-payment",
-      "destination": "https://appsail-50037084678.development.catalystappsail.in/Signup"
+      "destination": "https://appsail-50037084678.development.catalystappsail.in/payment/verify-payment"
     },
     {
        "source": "/delete-account",
-      "destination": "https://appsail-50037084678.development.catalystappsail.in/Signup"
+      "destination": "https://appsail-50037084678.development.catalystappsail.in/delete-account"
     },
     {
       "source": "/reqst",
