@@ -12,13 +12,12 @@ function Header({ onmenuClick, aboutRef, contactRef, homeRef, goToNextPage, goTo
   return (
     <div>
       <div className="main-back" ref={homeRef}>
-
-       <div className="background-shapes">
-        <div className="shape"></div>
-        <div className="shape"></div>
-        <div className="shape"></div>
-        <div className="shape"></div>
-    </div>
+        <div className="background-shapes">
+          <div className="shape"></div>
+          <div className="shape"></div>
+          <div className="shape"></div>
+          <div className="shape"></div>
+        </div>
 
         {/* Heading components */}
         <div className="heading">
@@ -33,16 +32,15 @@ function Header({ onmenuClick, aboutRef, contactRef, homeRef, goToNextPage, goTo
             </div>
           </div>
 
-           <div className="abt6">
+          <div className="abt6">
             <button id="abt-us6" onClick={() => window.scrollTo({ top: 0, behavior: "instant" })} >Home</button>
           </div>
 
-            <div className="abt7">
+          <div className="abt7">
             <button id="abt-us7" onClick={goToNextPage4} >
               Signup
             </button>
           </div>
-
 
           <div className="abt">
             <button
@@ -77,8 +75,6 @@ function Header({ onmenuClick, aboutRef, contactRef, homeRef, goToNextPage, goTo
               Web Registration
             </button>
           </div>
-
-         
         </div>
 
         {/* Images */}
@@ -216,12 +212,12 @@ function Header({ onmenuClick, aboutRef, contactRef, homeRef, goToNextPage, goTo
           </div>
         </div>
         <div className="bottom-nav">
-        <div className="check-sts1">
+          <div className="check-sts1">
             <button id="check1" onClick={handlepopup}>
-                Check Status
+              Check Status
             </button>
+          </div>
         </div>
-    </div>
       </div>
     </div>
   );
@@ -280,21 +276,17 @@ function Menubar({ visible, handleClose, aboutRef, contactRef, goToNextPage, goT
           </button>
         </div>
 
-
         <div className="log1">
           <button id="log-out" onClick={goToNextPage3}> Login </button>
         </div>
 
-
-      <div className="login1">
+        <div className="login1">
           <button id="log-in" onClick={goToNextPage4}> Signup </button>
         </div>
-
       </div>
     </div>
   );
 }
-
 
 function Status({ show, handleClose2, goToNextPage2 }) {
   return (
@@ -374,25 +366,20 @@ function Status({ show, handleClose2, goToNextPage2 }) {
           <div className="estimated-delivery">
             <button id="purchas" onClick={goToNextPage2}>🎉 Purchasing </button>
           </div>
-          
         </div>
       </div>
     </div>
   );
 }
 
-
-
-
-
 function Profile({ handleLogout }) {
-
   const [isOpen, setIsOpen] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
   const dropdownRef = useRef(null);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -414,14 +401,25 @@ function Profile({ handleLogout }) {
     setIsOpen(false);
   };
 
-
-
   useEffect(() => {
+    const token = sessionStorage.getItem('authToken');
+    if (!token) {
+      return;
+    }
+
     const fetchUsers = async () => {
       try {
-        const res = await axios.get("/users");
+        const res = await axios.get("/users", {
+          headers: { Authorization: `Bearer ${token}` }
+        });
         setUsers(res.data);
       } catch (err) {
+        if (err.response?.status === 401) {
+          sessionStorage.clear();
+          localStorage.clear();
+          navigate('/Login');
+          return;
+        }
         setError(err.response?.data?.message || "Failed to fetch users");
       } finally {
         setLoading(false);
@@ -429,8 +427,7 @@ function Profile({ handleLogout }) {
     };
 
     fetchUsers();
-  }, []);
-
+  }, [navigate]);
 
   const user = users.length > 0 ? users[0] : { Name: "", Email: "" };
   const firstLetter = user.Name ? user.Name.charAt(0).toUpperCase() : "👤";
@@ -479,7 +476,6 @@ function Profile({ handleLogout }) {
 }
 
 function App() {
-  
   const [menuVisible, setMenuVisible] = useState(false);
   const [show, setShowpopup] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -521,7 +517,7 @@ function App() {
 
   const handleLogout = async () => {
     const confirmLogout = window.confirm(
-    "WARNING: Logging out will DELETE your account and all data permanently. Are you sure?"
+      "WARNING: Logging out will DELETE your account and all data permanently. Are you sure?"
     );
     
     if (!confirmLogout) return;
@@ -531,7 +527,10 @@ function App() {
 
     if (!token) {
       alert("No active session found");
-      navigate("/Login");
+    
+      sessionStorage.clear();
+      localStorage.clear();
+      window.location.href = '/Login?' + Date.now();
       return;
     }
 
@@ -554,21 +553,39 @@ function App() {
 
       if (response.ok) {
         alert("Account deleted successfully!");
-        sessionStorage.clear();
-        localStorage.clear();
-        navigate("/Sign");
-        window.location.reload();
       } else {
         alert("Error: " + (data.message || "Could not delete account"));
       }
     } catch (error) {
       console.error("Logout error:", error);
       alert("Network error. Please try again.");
-    }
+    } finally {
+     
+      sessionStorage.clear();
+      localStorage.clear();
+      
+    
+      if ('ClearSiteData' in window) {
+        window.ClearSiteData({
+          cookies: true,
+          storage: '*',
+          cache: '*'
+        }).catch(console.error);
+      }
+      
 
-    setLoading(false);
+      window.location.href = '/Login?' + Date.now();
+    }
   };
 
+
+  useEffect(() => {
+    const token = sessionStorage.getItem('authToken');
+    if (!token) {
+      sessionStorage.clear();
+      localStorage.clear();
+    }
+  }, []);
 
   return (
     <div>
@@ -598,13 +615,12 @@ function App() {
         <Status 
           show={show} 
           handleClose2={handleCloseStatus}
-          handlepopup={handlepopup}
           goToNextPage2={goToNextPage2}
         />
       </div>
       <div className={`main-back ${show ? 'dimmed' : ''}`}>
         <Profile handleLogout={handleLogout}/>
-        </div>
+      </div>
     </div>
   );
 }
