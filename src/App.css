@@ -2665,3 +2665,11 @@ li::marker {
  font-size: 16px;
     }
 }
+
+.profile-pic.loading {
+  background: #ccc;
+  cursor: not-allowed;
+}
+.profile-pic.loading:hover {
+  transform: none;
+}

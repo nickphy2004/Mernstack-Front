@@ -379,7 +379,19 @@ function Profile({ handleLogout }) {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const navigate = useNavigate();
+
+  // Check auth on mount
+  useEffect(() => {
+    const token = sessionStorage.getItem('authToken');
+    if (!token) {
+      setIsAuthenticated(false);
+      setLoading(false);
+      return;
+    }
+    setIsAuthenticated(true);
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -393,30 +405,32 @@ function Profile({ handleLogout }) {
 
   const handleProfileClick = (e) => {
     e.stopPropagation();
+    // Don't open dropdown if not authenticated
+    if (!isAuthenticated) return;
     setIsOpen(!isOpen);
   };
 
   const handleViewProfile = () => {
+    if (!isAuthenticated) return;
     setShowProfile(true);
     setIsOpen(false);
   };
 
   useEffect(() => {
-    const token = sessionStorage.getItem('authToken');
-    if (!token) {
-      return;
-    }
+    if (!isAuthenticated) return;
 
     const fetchUsers = async () => {
       try {
+        const token = sessionStorage.getItem('authToken');
         const res = await axios.get("/users", {
           headers: { Authorization: `Bearer ${token}` }
         });
         setUsers(res.data);
       } catch (err) {
-        if (err.response?.status === 401) {
+        if (err.response?.status === 401 || err.response?.status === 403) {
           sessionStorage.clear();
           localStorage.clear();
+          setIsAuthenticated(false);
           navigate('/Login');
           return;
         }
@@ -427,53 +441,64 @@ function Profile({ handleLogout }) {
     };
 
     fetchUsers();
-  }, [navigate]);
+  }, [isAuthenticated, navigate]);
+
+  // Hide profile if not authenticated
+  if (!isAuthenticated && !loading) {
+    return null; // Don't render anything
+  }
 
   const user = users.length > 0 ? users[0] : { Name: "", Email: "" };
   const firstLetter = user.Name ? user.Name.charAt(0).toUpperCase() : "👤";
 
   return(
-    <div className="profile-wrapper" >
+    <div className="profile-wrapper">
       <div className="profile-button" ref={dropdownRef}>
-        <div className="profile-pic" onClick={handleProfileClick}>
-          {firstLetter}
+        <div className={`profile-pic ${loading ? 'loading' : ''}`} onClick={handleProfileClick}>
+          {loading ? "..." : firstLetter}
         </div>
-        <div className={`dropdown-menu ${isOpen ? 'active' : ''}`}>
-          <div className="menu-header">
-            <h3>{user.Name}</h3>
+        {isAuthenticated && (
+          <div className={`dropdown-menu ${isOpen ? 'active' : ''}`}>
+            <div className="menu-header">
+              <h3>{user.Name || 'Loading...'}</h3>
+            </div>
+            <div className="menu-item" onClick={handleViewProfile}>
+              <span className="menu-icon"></span>
+              <button>View profile</button>
+            </div>
+            <div className="menu-item" onClick={handleLogout}>
+              <span className="menu-icon"></span>
+              <button>Logout</button>
+            </div>
           </div>
-          <div className="menu-item" onClick={handleViewProfile}>
-            <span className="menu-icon"></span>
-            <button>View profile</button>
-          </div>
-          <div className="menu-item" onClick={handleLogout}>
-            <span className="menu-icon"></span>
-            <button>Logout</button>
-          </div>
-        </div>
+        )}
       </div>
 
-      <div className={`overlay ${showProfile ? 'active' : ''}`} onClick={() => setShowProfile(false)}></div>
-      
-      <div className={`profile-container ${showProfile ? 'active' : ''}`}>
-        <div className="close-button" onClick={() => setShowProfile(false)}>×</div>
-        <div className="profile-header">
-          <div className="profile-avatar">{firstLetter}</div>
-        </div>
-        <div className="profile-info">
-          <div className="profile-field">
-            <div className="profile-label">Name</div>
-            <div className="profile-value">{user.Name}</div>
+      {isAuthenticated && (
+        <>
+          <div className={`overlay ${showProfile ? 'active' : ''}`} onClick={() => setShowProfile(false)}></div>
+          <div className={`profile-container ${showProfile ? 'active' : ''}`}>
+            <div className="close-button" onClick={() => setShowProfile(false)}>×</div>
+            <div className="profile-header">
+              <div className="profile-avatar">{firstLetter}</div>
+            </div>
+            <div className="profile-info">
+              <div className="profile-field">
+                <div className="profile-label">Name</div>
+                <div className="profile-value">{user.Name}</div>
+              </div>
+              <div className="profile-field">
+                <div className="profile-label">Email</div>
+                <div className="profile-value">{user.Email}</div>
+              </div>
+            </div>
           </div>
-          <div className="profile-field">
-            <div className="profile-label">Email</div>
-            <div className="profile-value">{user.Email}</div>
-          </div>
-        </div>
-      </div>
+        </>
+      )}
     </div>
   );
 }
+
 
 function App() {
   const [menuVisible, setMenuVisible] = useState(false);
@@ -527,7 +552,7 @@ function App() {
 
     if (!token) {
       alert("No active session found");
-    
+      navigate("/Login");
       sessionStorage.clear();
       localStorage.clear();
       window.location.href = '/Login?' + Date.now();
