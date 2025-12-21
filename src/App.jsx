@@ -414,7 +414,7 @@ function Profile({ handleLogout }) {
   useEffect(() => {
     const fetchCurrentUser = async () => {
       try {
-        // Changed from sessionStorage to localStorage
+       
         const token = localStorage.getItem("authToken");
         const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
         
@@ -432,7 +432,7 @@ function Profile({ handleLogout }) {
         
         setUser(res.data);
       } catch (err) {
-        // Changed from sessionStorage to localStorage
+       
         const storedUser = JSON.parse(localStorage.getItem("user") || "{}");
         if (storedUser.Name || storedUser.name) {
           setUser({
@@ -542,7 +542,7 @@ function App() {
     
     if (!confirmLogout) return;
 
-    // Changed from sessionStorage to localStorage
+ 
     const token = localStorage.getItem("authToken");
     const user = JSON.parse(localStorage.getItem("user") || "{}");
 
@@ -571,7 +571,7 @@ function App() {
 
       if (response.ok) {
         alert("Account deleted successfully!");
-        // Changed from sessionStorage to localStorage
+       
         localStorage.clear();
         navigate("/Sign");
         window.location.reload();

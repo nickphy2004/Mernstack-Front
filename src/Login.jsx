@@ -22,13 +22,13 @@ export default function Login() {
     password: ""
   });
 
-  // Auto-login check: If user already logged in, redirect to home
+  
   useEffect(() => {
     const token = localStorage.getItem("authToken");
     const user = localStorage.getItem("user");
     
     if (token && user) {
-      // User already logged in, redirect to home
+      
       navigate("/");
     }
   }, [navigate]);
@@ -81,7 +81,7 @@ export default function Login() {
       if (response.ok && data.success) {
         console.log("Login successful:", data);
         
-        // Store token and user info in localStorage (persists across sessions)
+      
         localStorage.setItem("authToken", data.token);
         localStorage.setItem("user", JSON.stringify(data.user));
         
@@ -92,27 +92,27 @@ export default function Login() {
           setShowSuccess(true);
         }, 100);
 
-        // Navigate to home
+       
         setTimeout(() => {
           navigate("/");
         }, 1500);
 
       } else {
-        // Handle login errors
+       
         setLoading(false);
         
         errors = { ...initialStateError };
         
         const errorMsg = data.message ? data.message.toLowerCase() : "";
         
-        // Check for "already logged in" error
+      
         if (errorMsg.includes("already logged in") || 
             errorMsg.includes("another device") || 
             errorMsg.includes("another session") ||
             response.status === 403) {
           errors.custom_error = "⚠️ You are already logged in from another device/session.\nPlease logout first to login again.";
         }
-        // Check for email not found
+    
         else if (errorMsg.includes("email not found") || 
             errorMsg.includes("user not found") || 
             errorMsg.includes("user does not exist") ||
