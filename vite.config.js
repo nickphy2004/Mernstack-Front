@@ -11,6 +11,16 @@ export default defineConfig({
         changeOrigin: true,
         secure: false
       },
+      '/users' :{
+        target: 'https://appsail-50037084678.development.catalystappsail.in',
+        changeOrigin: true,
+        secure: false
+      },
+      '/payment/verify-payment':{
+        target: 'https://appsail-50037084678.development.catalystappsail.in',
+        changeOrigin: true,
+        secure: false
+      },
       '/Signup': {
         target: 'https://appsail-50037084678.development.catalystappsail.in',
         changeOrigin: true,

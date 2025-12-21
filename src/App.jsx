@@ -419,7 +419,7 @@ function Profile({ handleLogout }) {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const res = await axios.get("https://appsail-50037084678.development.catalystappsail.in/users");
+        const res = await axios.get("/users");
         setUsers(res.data);
       } catch (err) {
         setError(err.response?.data?.message || "Failed to fetch users");
