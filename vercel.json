@@ -1,0 +1,20 @@
+{
+  "rewrites": [
+    {
+      "source": "/Login",
+      "destination": "https://appsail-50037084678.development.catalystappsail.in/Login"
+    },
+    {
+      "source": "/Signup",
+      "destination": "https://appsail-50037084678.development.catalystappsail.in/Signup"
+    },
+    {
+      "source": "/reqst",
+      "destination": "https://appsail-50037084678.development.catalystappsail.in/reqst"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
