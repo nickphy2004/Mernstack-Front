@@ -17,6 +17,10 @@
       "destination": "https://appsail-50037084678.development.catalystappsail.in/Signup"
     },
     {
+       "source": "/delete-account",
+      "destination": "https://appsail-50037084678.development.catalystappsail.in/Signup"
+    },
+    {
       "source": "/reqst",
       "destination": "https://appsail-50037084678.development.catalystappsail.in/reqst"
     },

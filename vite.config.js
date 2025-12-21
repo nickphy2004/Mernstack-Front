@@ -21,6 +21,11 @@ export default defineConfig({
         changeOrigin: true,
         secure: false
       },
+      '/delete-account':{
+        target: 'https://appsail-50037084678.development.catalystappsail.in',
+        changeOrigin: true,
+        secure: false
+      },
       '/Signup': {
         target: 'https://appsail-50037084678.development.catalystappsail.in',
         changeOrigin: true,

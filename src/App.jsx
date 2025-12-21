@@ -538,7 +538,7 @@ function App() {
     setLoading(true);
 
     try {
-      const response = await fetch("https://appsail-50036846539.development.catalystappsail.in/delete-account", {
+      const response = await fetch("/delete-account", {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
