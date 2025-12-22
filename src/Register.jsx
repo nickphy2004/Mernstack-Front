@@ -41,7 +41,7 @@ export default function Register({ visible = true, onClose }) {
    
     const token = sessionStorage.getItem("authToken");
 
-    if (!token) {
+    if (token==authtoken) {
       alert("Session expired. Please login again.");
       navigate("/login");
       return;
@@ -65,7 +65,6 @@ export default function Register({ visible = true, onClose }) {
  
       if (response.status === 401 || response.status === 403) {
         alert("⚠️" + (data.message || "Session expired. Please login again."));
-        sessionStorage.removeItem("authToken");
         sessionStorage.removeItem("user");
         navigate("/login");
         return;
