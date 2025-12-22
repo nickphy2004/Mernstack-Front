@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function Register({ visible = true, onClose }) {
@@ -15,18 +15,6 @@ export default function Register({ visible = true, onClose }) {
   });
 
   
-  useEffect(() => {
-    const token = sessionStorage.getItem("authToken");
-    
-    if (!token) {
-      
-      alert("Please login first to access web registration");
-      navigate("/login"); 
-    }
-  }, []); 
-
-  
-
   const handleChange = (e) => {
     const field = e.target.id.replace(/[0-9]/g, "");
     setFormData({
@@ -38,19 +26,17 @@ export default function Register({ visible = true, onClose }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-   
     const token = sessionStorage.getItem("authToken");
 
-    if (token==authtoken) {
-      alert("Session expired. Please login again.");
-      navigate("/login");
+    if (!token) {
+      alert("Please login again.");
+      navigate("/reg");
       return;
     }
 
     setLoading(true);
 
     try {
-
       const response = await fetch("/reqst", {
         method: "POST",
         headers: {
@@ -62,11 +48,10 @@ export default function Register({ visible = true, onClose }) {
 
       const data = await response.json();
 
- 
       if (response.status === 401 || response.status === 403) {
         alert("⚠️" + (data.message || "Session expired. Please login again."));
-        sessionStorage.removeItem("user");
-        navigate("/login");
+        sessionStorage.removeItem("authToken");
+        navigate("/reg");
         return;
       }
 
@@ -76,7 +61,6 @@ export default function Register({ visible = true, onClose }) {
           success: true,
         });
 
-       
         setTimeout(() => {
           setFormData({
             name: "",
