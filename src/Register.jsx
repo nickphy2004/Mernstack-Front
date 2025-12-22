@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function Register({ visible = true, onClose }) {
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [checkingAuth, setCheckingAuth] = useState(true);
   const [formData, setFormData] = useState({
     name: "",
     phonenumber: "",
@@ -15,6 +17,49 @@ export default function Register({ visible = true, onClose }) {
   });
 
   
+  useEffect(() => {
+    const verifyToken = async () => {
+      const token = sessionStorage.getItem("authToken");
+
+      if (!token) {
+        setCheckingAuth(false);
+        setIsAuthenticated(false);
+        alert(" Please login first to access web registration.");
+        navigate("/reg");
+        return;
+      }
+
+      try {
+        const response = await fetch("/verify-token", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+          },
+        });
+
+        if (response.ok) {
+          setIsAuthenticated(true);
+        } else {
+          setIsAuthenticated(false);
+          sessionStorage.removeItem("authToken");
+          alert(" Session expired. Please login again.");
+          navigate("/reg");
+        }
+      } catch (error) {
+        console.error("Token verification error:", error);
+        setIsAuthenticated(false);
+        sessionStorage.removeItem("authToken");
+        alert(" Authentication failed. Please login again.");
+        navigate("/reg");
+      } finally {
+        setCheckingAuth(false);
+      }
+    };
+
+    verifyToken();
+  }, [navigate]);
+
   const handleChange = (e) => {
     const field = e.target.id.replace(/[0-9]/g, "");
     setFormData({
@@ -29,7 +74,7 @@ export default function Register({ visible = true, onClose }) {
     const token = sessionStorage.getItem("authToken");
 
     if (!token) {
-      alert("Please login again.");
+      alert("⚠️ Please login first.");
       navigate("/reg");
       return;
     }
@@ -41,7 +86,7 @@ export default function Register({ visible = true, onClose }) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`, 
+          "Authorization": `Bearer ${token}`,
         },
         body: JSON.stringify(formData),
       });
@@ -49,7 +94,7 @@ export default function Register({ visible = true, onClose }) {
       const data = await response.json();
 
       if (response.status === 401 || response.status === 403) {
-        alert("⚠️" + (data.message || "Session expired. Please login again."));
+        alert("" + (data.message || "Session expired. Please login again."));
         sessionStorage.removeItem("authToken");
         navigate("/reg");
         return;
@@ -74,18 +119,40 @@ export default function Register({ visible = true, onClose }) {
         }, 2000);
         return;
       } else {
-        alert(" Server error: " + (data.message || "Please try again"));
+        alert("Server error: " + (data.message || "Please try again"));
       }
     } catch (error) {
       console.error("Error:", error);
-      alert("Network error. Please check your connection and try again.");
+      alert(" Network error. Please check your connection and try again.");
     }
 
     setLoading(false);
   };
 
-  if (!visible) return null;
-  
+
+  if (checkingAuth) {
+    return (
+      <div className="back">
+        <div className="background-shapes">
+          <div className="shape"></div>
+          <div className="shape"></div>
+          <div className="shape"></div>
+          <div className="shape"></div>
+        </div>
+        <div className="flex-container">
+          <div className="reg-box show">
+            <div style={{ textAlign: 'center', padding: '50px' }}>
+              <div className="loader"></div>
+              <p>Verifying authentication...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated || !visible) return null;
+
   return (
     <div>
       <div className="back">
