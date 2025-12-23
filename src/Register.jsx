@@ -21,14 +21,14 @@ export default function Register({ visible = true, onClose }) {
     const verifyToken = async () => {
       const token = sessionStorage.getItem("authToken");
 
-      if (!token) {
+      if (token) {
         setCheckingAuth(false);
         setIsAuthenticated(false);
         alert(" Please login first to access web registration.");
-        navigate("/reg");
+        navigate("/Login");
         return;
       }
-
+      
       try {
         const response = await fetch("/verify-token", {
           method: "GET",
@@ -70,14 +70,6 @@ export default function Register({ visible = true, onClose }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const token = sessionStorage.getItem("authToken");
-
-    if (!token) {
-      alert("⚠️ Please login first.");
-      navigate("/reg");
-      return;
-    }
 
     setLoading(true);
 
