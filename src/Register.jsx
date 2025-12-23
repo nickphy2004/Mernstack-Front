@@ -19,12 +19,14 @@ export default function Register({ visible = true, onClose }) {
   
   useEffect(() => {
     const verifyToken = async () => {
-      const token = sessionStorage.getItem("authToken");
+      const token = localStorage.getItem("authToken");
+      console.log("Token:", token);
 
-      if (token) {
+      if (!token) {
+        console.log(token);
         setCheckingAuth(false);
         setIsAuthenticated(false);
-        alert(" Please login first to access web registration.");
+        alert("Please login first to access web registration.");
         navigate("/Login");
         return;
       }
@@ -42,16 +44,16 @@ export default function Register({ visible = true, onClose }) {
           setIsAuthenticated(true);
         } else {
           setIsAuthenticated(false);
-          sessionStorage.removeItem("authToken");
-          alert(" Session expired. Please login again.");
-          navigate("/reg");
+          localStorage.removeItem("authToken");
+          alert("Session expired. Please login again.");
+          navigate("/Login");
         }
       } catch (error) {
         console.error("Token verification error:", error);
         setIsAuthenticated(false);
-        sessionStorage.removeItem("authToken");
-        alert(" Authentication failed. Please login again.");
-        navigate("/reg");
+        localStorage.removeItem("authToken");
+        alert("Authentication failed. Please login again.");
+        navigate("/Login");
       } finally {
         setCheckingAuth(false);
       }
@@ -74,6 +76,8 @@ export default function Register({ visible = true, onClose }) {
     setLoading(true);
 
     try {
+      const token = localStorage.getItem("authToken");
+      
       const response = await fetch("/reqst", {
         method: "POST",
         headers: {
@@ -87,8 +91,8 @@ export default function Register({ visible = true, onClose }) {
 
       if (response.status === 401 || response.status === 403) {
         alert("" + (data.message || "Session expired. Please login again."));
-        sessionStorage.removeItem("authToken");
-        navigate("/reg");
+        localStorage.removeItem("authToken");
+        navigate("/Login");
         return;
       }
 
@@ -115,7 +119,7 @@ export default function Register({ visible = true, onClose }) {
       }
     } catch (error) {
       console.error("Error:", error);
-      alert(" Network error. Please check your connection and try again.");
+      alert("Network error. Please check your connection and try again.");
     }
 
     setLoading(false);
@@ -133,7 +137,7 @@ export default function Register({ visible = true, onClose }) {
         </div>
         <div className="flex-container">
           <div className="reg-box show">
-            <div style={{ textAlign: 'center', padding: '50px' }}>
+            <div style={{ textAlign: 'center', padding: '100px' }}>
               <div className="loader"></div>
               <p>Verifying authentication...</p>
             </div>

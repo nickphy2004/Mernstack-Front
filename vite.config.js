@@ -36,6 +36,11 @@ export default defineConfig({
         changeOrigin: true,
         secure: false
       },
+      '/verify-token': {
+        target: 'https://appsail-50037084678.development.catalystappsail.in',
+        changeOrigin: true,
+        secure: false
+      },
       '/reqst': {
         target: 'https://appsail-50037084678.development.catalystappsail.in',
         changeOrigin: true,
