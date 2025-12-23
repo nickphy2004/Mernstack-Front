@@ -101,7 +101,7 @@ export default function PayAdvanced() {
                         const result = await verifyResponse.json();
 
                         if (result.success) {
-                            alert(`✅ Payment Successful!\n\nPayment ID: ${result.paymentId}`);
+                            alert(` Payment Successful!\n\nPayment ID: ${result.paymentId}`);
                             setShowUpiOptions(false);
                         } else {
                             alert("Payment verification failed.");
@@ -142,7 +142,7 @@ export default function PayAdvanced() {
         }
     };
 
-    // Handle other payment methods
+   
     const handleOtherPayment = async (method) => {
         setLoading(true);
 
@@ -156,7 +156,7 @@ export default function PayAdvanced() {
         try {
             const user = JSON.parse(localStorage.getItem('user') || '{}');
             
-            const response = await fetch("http://localhost:8000/payment/create-order", {
+            const response = await fetch("/payment/create-order", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -186,7 +186,7 @@ export default function PayAdvanced() {
                 
                 handler: async function (response) {
                     try {
-                        const verifyResponse = await fetch("https://appsail-50036846539.development.catalystappsail.in/payment/verify-payment", {
+                        const verifyResponse = await fetch("/payment/verify-payment", {
                             method: "POST",
                             headers: {
                                 "Content-Type": "application/json",
@@ -201,7 +201,7 @@ export default function PayAdvanced() {
                         const result = await verifyResponse.json();
 
                         if (result.success) {
-                            alert(`✅ Payment Successful!\n\nPayment ID: ${result.paymentId}`);
+                            alert(` Payment Successful!\n\nPayment ID: ${result.paymentId}`);
                         } else {
                             alert("Payment verification failed.");
                         }

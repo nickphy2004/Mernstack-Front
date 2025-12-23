@@ -21,6 +21,10 @@
       "destination": "https://appsail-50037084678.development.catalystappsail.in/payment/verify-payment"
     },
     {
+       "source": "/payment/create-order",
+      "destination": "https://appsail-50037084678.development.catalystappsail.in/payment/create-order"
+    },
+    {
        "source": "/delete-account",
       "destination": "https://appsail-50037084678.development.catalystappsail.in/delete-account"
     },
