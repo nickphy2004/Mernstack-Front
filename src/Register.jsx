@@ -7,6 +7,8 @@ export default function Register({ visible = true, onClose }) {
   const [loading, setLoading] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [checkingAuth, setCheckingAuth] = useState(true);
+  const [showStatus, setShowStatus] = useState(false);
+  const [webRegData, setWebRegData] = useState(null);
   const [formData, setFormData] = useState({
     name: "",
     phonenumber: "",
@@ -16,14 +18,10 @@ export default function Register({ visible = true, onClose }) {
     success: false,
   });
 
-  
   useEffect(() => {
     const verifyToken = async () => {
       const token = localStorage.getItem("authToken");
-      console.log("Token:", token);
-
       if (!token) {
-        console.log(token);
         setCheckingAuth(false);
         setIsAuthenticated(false);
         alert("Please login first to access web registration.");
@@ -72,12 +70,10 @@ export default function Register({ visible = true, onClose }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     setLoading(true);
 
     try {
       const token = localStorage.getItem("authToken");
-      
       const response = await fetch("/reqst", {
         method: "POST",
         headers: {
@@ -97,21 +93,15 @@ export default function Register({ visible = true, onClose }) {
       }
 
       if (response.ok && data.success) {
-        setFormData({
-          ...formData,
-          success: true,
-        });
+        setWebRegData(data.data);
+        setFormData({ ...formData, success: true });
 
         setTimeout(() => {
           setFormData({
-            name: "",
-            phonenumber: "",
-            email: "",
-            webType: "",
-            description: "",
-            success: false,
+            name: "", phonenumber: "", email: "", webType: "", description: "", success: false,
           });
           setLoading(false);
+          setShowStatus(true);
         }, 2000);
         return;
       } else {
@@ -125,15 +115,19 @@ export default function Register({ visible = true, onClose }) {
     setLoading(false);
   };
 
+  const handleCloseStatus = () => {
+    setShowStatus(false);
+  };
+
+  const goToNextPage = () => {
+    navigate("/purchase");
+  };
 
   if (checkingAuth) {
     return (
       <div className="back">
         <div className="background-shapes">
-          <div className="shape"></div>
-          <div className="shape"></div>
-          <div className="shape"></div>
-          <div className="shape"></div>
+          <div className="shape"></div><div className="shape"></div><div className="shape"></div><div className="shape"></div>
         </div>
         <div className="flex-container">
           <div className="reg-box show">
@@ -150,22 +144,17 @@ export default function Register({ visible = true, onClose }) {
   if (!isAuthenticated || !visible) return null;
 
   return (
-    <div>
+    <>
       <div className="back">
         <div className="background-shapes">
-          <div className="shape"></div>
-          <div className="shape"></div>
-          <div className="shape"></div>
-          <div className="shape"></div>
+          <div className="shape"></div><div className="shape"></div><div className="shape"></div><div className="shape"></div>
         </div>
 
         <div className="flex-container">
           <div className="reg-box show">
             {onClose && (
               <div className="close-btn1">
-                <button onClick={onClose}>
-                  <div id="closebtn"></div>
-                </button>
+                <button onClick={onClose}><div id="closebtn"></div></button>
               </div>
             )}
 
@@ -174,56 +163,28 @@ export default function Register({ visible = true, onClose }) {
 
             <div className="point1">
               <form id="form-list1" onSubmit={handleSubmit}>
-
                 <div className="form-field1">
                   <label htmlFor="name1">Your Name (with initial)</label>
-                  <input
-                    type="text"
-                    id="name1"
-                    placeholder="Enter your name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    required
-                    disabled={loading}
-                  />
+                  <input type="text" id="name1" placeholder="Enter your name" value={formData.name}
+                    onChange={handleChange} required disabled={loading} />
                 </div>
 
                 <div className="form-field1">
                   <label htmlFor="phonenumber1">Phone Number</label>
-                  <input
-                    type="tel"
-                    id="phonenumber1"
-                    placeholder="Enter your phone number"
-                    value={formData.phonenumber}
-                    onChange={handleChange}
-                    pattern="[0-9]{10}"
-                    required
-                    disabled={loading}
-                  />
+                  <input type="tel" id="phonenumber1" placeholder="Enter your phone number" 
+                    value={formData.phonenumber} onChange={handleChange} pattern="[0-9]{10}" 
+                    required disabled={loading} />
                 </div>
 
                 <div className="form-field1">
                   <label htmlFor="email1">E-mail Address</label>
-                  <input
-                    type="email"
-                    id="email1"
-                    placeholder="Enter your e-mail"
-                    value={formData.email}
-                    onChange={handleChange}
-                    required
-                    disabled={loading}
-                  />
+                  <input type="email" id="email1" placeholder="Enter your e-mail" 
+                    value={formData.email} onChange={handleChange} required disabled={loading} />
                 </div>
 
                 <div className="form-field1">
                   <label htmlFor="webType1">Website Type</label>
-                  <select
-                    id="webType1"
-                    value={formData.webType}
-                    onChange={handleChange}
-                    required
-                    disabled={loading}
-                  >
+                  <select id="webType1" value={formData.webType} onChange={handleChange} required disabled={loading}>
                     <option value="">Select type</option>
                     <option>Business Website</option>
                     <option>E-Commerce Website</option>
@@ -234,20 +195,13 @@ export default function Register({ visible = true, onClose }) {
 
                 <div className="form-field1">
                   <label htmlFor="description1">Description</label>
-                  <textarea
-                    id="description1"
-                    placeholder="Write a short description..."
-                    value={formData.description}
-                    onChange={handleChange}
-                    required
-                    disabled={loading}
-                  ></textarea>
+                  <textarea id="description1" placeholder="Write a short description..." 
+                    value={formData.description} onChange={handleChange} required disabled={loading} />
                 </div>
 
                 <button type="submit" className="submit-btn1" disabled={loading}>
                   {loading ? "Submitting..." : "Submit"}
                 </button>
-
               </form>
             </div>
           </div>
@@ -256,7 +210,6 @@ export default function Register({ visible = true, onClose }) {
         {loading && (
           <div className="popup-overlay">
             <div className="popup-box">
-
               {!formData.success ? (
                 <>
                   <div className="loader"></div>
@@ -268,19 +221,19 @@ export default function Register({ visible = true, onClose }) {
                   <p>Request Submitted Successfully!</p>
                 </>
               )}
-
             </div>
           </div>
         )}
+      </div>
 
-        <div className="main-thing1">
-          <div className="main-thing">
-            <div className="main">
-              <h2 id="hding">Web requesting platform</h2>
-              <p id="pding">
-                This is a web-requesting platform where people who wants their <br /> website can easily request one and <br />receive a responsive website.
-              </p>
-            </div>
+      <div className="main-thing1">
+        <div className="main-thing">
+          <div className="main">
+            <h2 id="hding">Web requesting platform</h2>
+            <p id="pding">
+              This is a web-requesting platform where people who wants their <br />
+              website can easily request one and <br />receive a responsive website.
+            </p>
           </div>
         </div>
       </div>
@@ -295,6 +248,6 @@ export default function Register({ visible = true, onClose }) {
           </ul>
         </div>
       </div>
-    </div>
+    </>
   );
 }

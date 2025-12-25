@@ -295,25 +295,54 @@ function Menubar({ visible, handleClose, aboutRef, contactRef, goToNextPage, goT
   );
 }
 
+function Status({ show, handleClose2, goToNextPage2, webRegData }) {
 
-function Status({ show, handleClose2, goToNextPage2 }) {
+
+  const [userId, setUserId] = useState(null);
+  React.useEffect(() => {
+    const token = localStorage.getItem("authToken");
+    if (token) {
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        setUserId(payload.userId || payload.id || payload.sub || 'User-' + Date.now());
+      } catch (error) {
+        console.error("Token decode error:", error);
+        setUserId("N/A");
+      }
+    }
+  }, []);
+
+  const placedOn = webRegData?.placedOn || new Date().toLocaleDateString();
+  const totalAmount = webRegData?.totalAmount || "₹2,499";
+  
+  React.useEffect(() => {
+    if (userId && userId !== "N/A") {
+      console.log("User ID:", userId);
+      console.log("webRegData:", webRegData);
+    }
+  }, [userId, webRegData]);
+
   return (
     <div>
       <div className="container" style={{ display: show ? "block" : "none" }}>
         <div className="header">
-          <h1>🚚 Check Your Site Status</h1>
+          <h1>Check Your Site Status</h1>
           <div className="order-info">
             <div className="info-item">
-              <div className="info-label">Order ID</div>
-              <div className="info-value">#ORD789456123</div>
+              <div className="info-label"> Order ID</div> 
+              <div className="info-value" style={{fontWeight: 'bold', color: 'white'}}>
+                {userId || 'N/O'}
+              </div>
             </div>
+
+
             <div className="info-item">
               <div className="info-label">Placed On</div>
-              <div className="info-value">Nov 28, 2024</div>
+              <div className="info-value">{placedOn}</div>
             </div>
             <div className="info-item">
               <div className="info-label">Total Amount</div>
-              <div className="info-value">₹2,499</div>
+              <div className="info-value">{totalAmount}</div>
             </div>
           </div>
         </div>
@@ -356,7 +385,7 @@ function Status({ show, handleClose2, goToNextPage2 }) {
             <div className="timeline-item active">
               <div className="timeline-dot"></div>
               <div className="timeline-content">
-                <div className="timeline-title">🚚 Finished</div>
+                <div className="timeline-title">Finished</div>
                 <div className="timeline-desc">Your site is functioning correctly during testing</div>
                 <span className="status-badge status-active">In Progress</span>
               </div>
@@ -365,16 +394,14 @@ function Status({ show, handleClose2, goToNextPage2 }) {
             <div className="timeline-item">
               <div className="timeline-dot"></div>
               <div className="timeline-content">
-                <div className="timeline-title">Now you can going to purchas</div>
-                <div className="timeline-desc">Package will be delivered to your address</div>
+                <div className="timeline-title">Now you can going to purchase</div>
               </div>
             </div>
           </div>
 
           <div className="estimated-delivery">
-            <button id="purchas" onClick={goToNextPage2}>🎉 Purchasing </button>
+            <button id="purchas" onClick={goToNextPage2}>🎉 Purchasing</button>
           </div>
-          
         </div>
       </div>
     </div>
@@ -494,16 +521,16 @@ function Profile({ handleLogout }) {
     </div>
   );
 }
+
 function App() {
   
   const [menuVisible, setMenuVisible] = useState(false);
-  const [show, setShowpopup] = useState(false);
+  const [showStatus, setShowStatus] = useState(false);
+  const [webRegData, setWebRegData] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const handleMenuClick = () => setMenuVisible(!menuVisible);
   const handleCloseMenu = () => setMenuVisible(false);
-
-  const initial = {name:{required:false}} 
 
   const navigate = useNavigate();
 
@@ -528,11 +555,11 @@ function App() {
   const homeRef = useRef(null);
 
   const handlepopup = () => {
-    setShowpopup(!show);
+    setShowStatus(!showStatus);
   };
 
   const handleCloseStatus = () => {
-    setShowpopup(false);
+    setShowStatus(false);
   };
 
   const handleLogout = async () => {
@@ -589,7 +616,7 @@ function App() {
 
   return (
     <div>
-      <div className={`main-back ${show ? 'dimmed' : ''}`}>
+      <div className={`main-back ${showStatus ? 'dimmed' : ''}`}>
         <Header
           onmenuClick={handleMenuClick}
           aboutRef={aboutRef}
@@ -613,15 +640,15 @@ function App() {
       />
       <div>
         <Status 
-          show={show} 
+          show={showStatus} 
           handleClose2={handleCloseStatus}
-          handlepopup={handlepopup}
           goToNextPage2={goToNextPage2}
+          webRegData={webRegData}
         />
       </div>
-      <div className={`main-back ${show ? 'dimmed' : ''}`}>
+      <div className={`main-back ${showStatus ? 'dimmed' : ''}`}>
         <Profile handleLogout={handleLogout}/>
-        </div>
+      </div>
     </div>
   );
 }

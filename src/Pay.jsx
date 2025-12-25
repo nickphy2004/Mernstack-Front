@@ -9,7 +9,7 @@ export default function PayAdvanced() {
 
     const totalAmount = 3065.64;
 
-    // Load Razorpay script
+ 
     const loadRazorpayScript = () => {
         return new Promise((resolve) => {
             const script = document.createElement("script");
@@ -20,7 +20,7 @@ export default function PayAdvanced() {
         });
     };
 
-    // Handle UPI Payment with custom flow
+
     const handleUpiPayment = async () => {
         setLoading(true);
 
@@ -34,7 +34,7 @@ export default function PayAdvanced() {
         try {
             const user = JSON.parse(localStorage.getItem('user') || '{}');
             
-            const response = await fetch("https://appsail-50037084678.development.catalystappsail.in/payment/create-order", {
+            const response = await fetch("/payment/create-order", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -54,7 +54,7 @@ export default function PayAdvanced() {
             }
 
             const options = {
-                key: "rzp_test_xxxxxxxxxxx", // Replace with your key
+                key: "rzp_test_xxxxxxxxxxx",
                 amount: order.amount,
                 currency: order.currency,
                 name: "Your Company Name",
@@ -62,7 +62,7 @@ export default function PayAdvanced() {
                 order_id: order.id,
                 method: "upi",
                 
-                // Pre-fill UPI ID if entered
+            
                 ...(upiId && {
                     prefill: {
                         vpa: upiId,
