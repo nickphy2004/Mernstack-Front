@@ -400,7 +400,7 @@ function Status({ show, handleClose2, goToNextPage2, webRegData }) {
           </div>
 
           <div className="estimated-delivery">
-            <button id="purchas" onClick={goToNextPage2}>🎉 Purchasing</button>
+            <button id="purchas" onClick={goToNextPage2}>Purchasing</button>
           </div>
         </div>
       </div>
