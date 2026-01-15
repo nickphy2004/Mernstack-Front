@@ -4,14 +4,15 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   server: {
-    port: 9000,
+    host: true,
+    port: 9000, // ✅ comma was missing here
     proxy: {
       '/Login': {
         target: 'https://appsail-50037084678.development.catalystappsail.in',
         changeOrigin: true,
         secure: false
       },
-      '/users' :{
+      '/users': {
         target: 'https://appsail-50037084678.development.catalystappsail.in',
         changeOrigin: true,
         secure: false
@@ -21,17 +22,17 @@ export default defineConfig({
         changeOrigin: true,
         secure: false
       },
-      '/payment/verify-payment':{
+      '/payment/verify-payment': {
         target: 'https://appsail-50037084678.development.catalystappsail.in',
         changeOrigin: true,
         secure: false
       },
-      '/payment/create-order':{
+      '/payment/create-order': {
         target: 'https://appsail-50037084678.development.catalystappsail.in',
         changeOrigin: true,
         secure: false
       },
-      '/delete-account':{
+      '/delete-account': {
         target: 'https://appsail-50037084678.development.catalystappsail.in',
         changeOrigin: true,
         secure: false
