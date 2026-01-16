@@ -378,8 +378,8 @@ form {
 @media (min-width: 375px) and (max-width: 479px) {
     .main-wrapper5 {
         padding: 0 4%;
-        width: 189%;
-        margin-left: -80px;
+        width: 180%;
+        margin-left: -77px;
         top:-10px
     }
     
@@ -411,7 +411,7 @@ form {
 @media (min-width: 480px) and (max-width: 599px) {
     .main-wrapper5 {
         padding: 0 5%;
-        width: 147%;
+        width: 140%;
         left: -49px;
         top: -50px;
     }
